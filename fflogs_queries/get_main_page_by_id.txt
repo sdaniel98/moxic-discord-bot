@@ -1,0 +1,7 @@
+query{{
+  characterData{{
+    character(id: {id}){{
+      zoneRankings
+    }}
+  }}
+}}

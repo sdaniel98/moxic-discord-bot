@@ -6,6 +6,13 @@ name = "pypi"
 [packages]
 "discord.py" = "*"
 python-dotenv = "*"
+pillow = "*"
+pytest = "*"
+pytest-asyncio = "*"
+pytest-dependency = "*"
+requests = "*"
+requests-oauthlib = "*"
+pyxivapi = "*"
 
 [dev-packages]
 

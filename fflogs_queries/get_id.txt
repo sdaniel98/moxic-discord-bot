@@ -1,0 +1,7 @@
+query{{
+  characterData{{
+    character(name: "{name}", serverSlug: "{server}", serverRegion: "{region}"){{
+      {id_type}ID
+    }}
+  }}
+}}

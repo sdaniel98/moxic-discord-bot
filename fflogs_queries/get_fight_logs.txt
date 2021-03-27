@@ -1,0 +1,7 @@
+query{{
+  characterData{{
+    character(name: "{name}", serverSlug: "{server}", serverRegion: "{region}"){{
+      encounterRankings(encounterID: {encounter_id})
+    }}
+  }}
+}}
