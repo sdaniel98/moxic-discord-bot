@@ -1,0 +1,7 @@
+query{{
+  reportData{{
+    report(code: "{report_id}"){{
+      rankings
+    }}
+  }}
+}}
