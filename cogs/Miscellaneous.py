@@ -3,6 +3,9 @@ from discord.ext import commands
 
 class Miscellaneous(commands.Cog):
 
+    def __init__(self, bot):
+        self.bot = bot
+
     @commands.command(name="invite", aliases=["inv"])
     async def invite(self, ctx):
         invite_url = "https://discord.com/oauth2/authorize?client_id=822655619403874324&permissions=116736&scope=bot"

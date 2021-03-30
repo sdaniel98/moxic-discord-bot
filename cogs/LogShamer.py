@@ -1,3 +1,4 @@
+from .cog_helpers import DatabaseManager, LogGetter
 from discord.ext import commands
 import discord
 import traceback
@@ -7,7 +8,6 @@ from io import BytesIO
 import math
 from sqlite3 import IntegrityError
 from random import Random
-from .LogShamer_helpers import DatabaseManager, LogGetter
 
 
 #times are stored in time from epoch in ms

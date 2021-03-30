@@ -4,7 +4,8 @@ from discord.ext import commands
 
 extensions = ["cogs.Developer",
               "cogs.LogShamer",
-              "cogs.Miscellaneous"]
+              "cogs.Miscellaneous",
+              "cogs.LivelogHelper"]
 
 if __name__ == '__main__':
     load_dotenv("./Authentication Files/.env")

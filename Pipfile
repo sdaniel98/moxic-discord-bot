@@ -13,6 +13,7 @@ pytest-dependency = "*"
 requests = "*"
 requests-oauthlib = "*"
 pyxivapi = "*"
+pyinstaller = "*"
 
 [dev-packages]
 

@@ -5,10 +5,6 @@ import base64
 import asyncio.exceptions
 from aiohttp import ClientSession, ClientTimeout
 
-class NoLodestoneData(Exception):
-    def __init__(self):
-        pass
-
 #query templates are saved in files to be more readable
 class LogGetter:
 
@@ -109,6 +105,14 @@ class LogGetter:
 
         print(lodestone)
         return (base64.b64encode((json.dumps(lodestone)).encode())).decode()
+
+    async def get_reports_page(self, report_id):
+        with open("./fflogs_queries/get_reports_rankings.txt", "r") as f:
+            q = f.read()
+
+        tmp =  await self.get_query_results(q.format(report_id=report_id))
+
+        return tmp['data']['reportData']['report']['rankings']['data']
 
     def close_connections(self):
         self.session.close()
