@@ -1,20 +1,22 @@
-from requests_oauthlib import OAuth2Session
-import json
-import pyxivapi
-import base64
 import asyncio.exceptions
-from aiohttp import ClientSession, ClientTimeout
+import base64
+import json
 
-#query templates are saved in files to be more readable
+import pyxivapi
+from aiohttp import ClientSession, ClientTimeout
+from requests_oauthlib import OAuth2Session
+
+
+# query templates are saved in files to be more readable
 class LogGetter:
 
     def __init__(self):
-        #ids stored as (zone id, encounter id)
+        # ids stored as (zone id, encounter id)
         self.encounter_ids = {"tea": (32, 1050), "ucob_sb": (19, 1039), "uwu_sb": (23, 1042),
                               "ucob_shb": (30, 1047), "uwu_shb": (30, 1048), "e12s": (38, 77)}
         self.server_regions = {"sargatanas": "na", "gilgamesh": "na"}
 
-        #get oauth2 token and client_id from file
+        # get oauth2 token and client_id from file
         t = ""
         fp = "C:/Users/stefa/PycharmProjects/moxic_bot/Authentication Files/FFlogs Authentication.txt"
         with open(fp, "r") as file:
@@ -29,7 +31,7 @@ class LogGetter:
         self.session = OAuth2Session(client_id, token=token)
         self.xiv_api_client = pyxivapi.XIVAPIClient(api_key=xiv_api_key, session=ClientSession(timeout=timeout))
 
-    #encounter is the page with all of your logs
+    # encounter is the page with all of your logs
     async def get_logs_by_encounter(self, encounter=None, encounter_id=None, name=None, server=None, id=None):
         if id is not None:
             with open("./fflogs_queries/get_fight_logs_by_id.txt", "r") as f:
@@ -71,9 +73,9 @@ class LogGetter:
             q = f.read()
 
         tmp = await self.get_query_results(q.format(name=name,
-                                                     server=server,
-                                                     region="na",
-                                                     id_type="canonical"))
+                                                    server=server,
+                                                    region="na",
+                                                    id_type="canonical"))
 
         return tmp['data']['characterData']['character']['canonicalID']
 
@@ -81,10 +83,10 @@ class LogGetter:
         with open("./fflogs_queries/get_id.txt", "r") as f:
             q = f.read()
 
-        tmp =  await self.get_query_results(q.format(name=name,
-                                                     server=server,
-                                                     region="na",
-                                                     id_type="lodestone"))
+        tmp = await self.get_query_results(q.format(name=name,
+                                                    server=server,
+                                                    region="na",
+                                                    id_type="lodestone"))
 
         return tmp['data']['characterData']['character']['lodestoneID']
 
@@ -110,10 +112,10 @@ class LogGetter:
         with open("./fflogs_queries/get_reports_rankings.txt", "r") as f:
             q = f.read()
 
-        tmp =  await self.get_query_results(q.format(report_id=report_id))
+        tmp = await self.get_query_results(q.format(report_id=report_id))
 
         return tmp['data']['reportData']['report']['rankings']['data']
 
     def close_connections(self):
         self.session.close()
-        #await self.xiv_api_client.session.close()
+        # await self.xiv_api_client.session.close()

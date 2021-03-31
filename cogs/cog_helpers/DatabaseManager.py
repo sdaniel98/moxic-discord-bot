@@ -1,6 +1,7 @@
-import sqlite3
-import json
 import base64
+import json
+import sqlite3
+
 
 class DatabaseManager:
 
@@ -58,7 +59,7 @@ class DatabaseManager:
         else:
             tmp = cur.fetchone()[0]
             cur.close()
-            #convert cache string to bytes then base64decode it then convert back to string and turn it into a dictionary
+            # convert cache string to bytes then base64decode it then convert back to string and turn it into a dictionary
             return json.loads((base64.b64decode(tmp.encode())).decode())
 
     async def update_lodestone_cache(self, discord_id, new_cache):

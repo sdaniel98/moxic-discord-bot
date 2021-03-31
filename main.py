@@ -1,6 +1,7 @@
 import os
-from dotenv import load_dotenv
+
 from discord.ext import commands
+from dotenv import load_dotenv
 
 extensions = ["cogs.Developer",
               "cogs.LogShamer",
@@ -21,9 +22,10 @@ if __name__ == '__main__':
             print(f"Failed to load: {ext}")
             print(e)
 
+
     @bot.event
     async def on_ready():
         print(f"Successfully connected to {bot.user}")
 
-    bot.run(TOKEN)
 
+    bot.run(TOKEN)

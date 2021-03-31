@@ -1,3 +1,6 @@
+import sys
+
+sys.path.append("cogs/cog_helpers")
 from .cog_helpers import DatabaseManager, LogGetter
 from discord.ext import commands
 import discord
@@ -9,10 +12,10 @@ import math
 from sqlite3 import IntegrityError
 from random import Random
 
-
-#times are stored in time from epoch in ms
+# times are stored in time from epoch in ms
 release_dates = {"ucob": 1508832000000, "uwu": 1528192800000, "tea": 1573547400000, "current_tier": 1607389200000}
 MS_IN_A_WEEK = 604800000
+
 
 class LogShamer(commands.Cog):
 
@@ -28,7 +31,7 @@ class LogShamer(commands.Cog):
         except TypeError:
             await ctx.send(f"I don't know who that is. Tell them to use {self.bot.command_prefix}iam")
 
-    @get_logs.command(name="ultimate", aliases=["ult", "u"])
+    @get_logs.command(name="ultimate", aliases=["Ultimate", "Ult", "ult"])
     async def get_ultimate_logs(self, ctx, *, user: discord.Member):
         try:
             await self.display_ultimate_logs(ctx, user.id)
@@ -44,7 +47,7 @@ class LogShamer(commands.Cog):
     @commands.command(name="iam")
     async def setup_profile(self, ctx, *, character):
         try:
-            #expecting command to be formatted like <first_name last_name server>
+            # expecting command to be formatted like <first_name last_name server>
             print(character)
             tmp = character.split(" ")
             name = tmp[0] + " " + tmp[1]
@@ -56,11 +59,14 @@ class LogShamer(commands.Cog):
         except TypeError:
             await msg.edit(content=f"I couldn't find {name} on {server}")
         except IntegrityError:
-            await msg.edit(content="Uh oh either you're already in the database or that character is already associated with someone else.")
+            await msg.edit(
+                content="Uh oh either you're already in the database or that character is already associated with someone else.")
         except Exception as e:
-            await msg.edit(content="Couldn't be added. I'll update this to catch specific exceptions later. Enter in shit right next time you fucking monkey.")
+            await msg.edit(
+                content="Couldn't be added. I'll update this to catch specific exceptions later. Enter in shit right next time you fucking monkey.")
             print(f"Error adding a user {e} {type(e)}")
-        else: await msg.edit(content="User successfully added.")
+        else:
+            await msg.edit(content="User successfully added.")
 
     @commands.group(name="mylogs", aliases=["ml"], invoke_without_command=True)
     async def get_caller_logs(self, ctx):
@@ -70,7 +76,7 @@ class LogShamer(commands.Cog):
             traceback.print_exc()
             await ctx.send("I don't know who you are. Use #iam to add your character")
 
-    @get_caller_logs.command(name="ultimate", aliases=["ult", "u"])
+    @get_caller_logs.command(name="ultimate", aliases=["Ultimate", "Ult", "ult"])
     async def get_caller_ultimate_logs(self, ctx):
         try:
             await self.display_ultimate_logs(ctx, ctx.author.id)
@@ -95,7 +101,8 @@ class LogShamer(commands.Cog):
             await msg.edit(content=f"I couldn't find {name} on {server}")
         except Exception as e:
             print(e + " " + type(Exception))
-        else: await msg.edit(content="User successfully added")
+        else:
+            await msg.edit(content="User successfully added")
 
     async def add_to_db(self, discord_id, name, server):
         name = name.lower()
@@ -210,7 +217,8 @@ class LogShamer(commands.Cog):
         sb_kills = logs_sb['data']['characterData']['character']['encounterRankings']['totalKills']
         sb_best = await self.get_best_rank(logs_sb['data']['characterData']['character']['encounterRankings']['ranks'])
         sb_median = logs_sb['data']['characterData']['character']['encounterRankings']['medianPerformance']
-        if not sb_median: sb_median = "-"
+        if not sb_median:
+            sb_median = "-"
         else:
             sb_median = round(sb_median, 2)
 
@@ -221,10 +229,13 @@ class LogShamer(commands.Cog):
 
         logs_shb = await self.helper.get_logs_by_encounter(encounter="ucob_shb", id=fflogs_id)
         shb_kills = logs_shb['data']['characterData']['character']['encounterRankings']['totalKills']
-        shb_best = await self.get_best_rank(logs_shb['data']['characterData']['character']['encounterRankings']['ranks'])
+        shb_best = await self.get_best_rank(
+            logs_shb['data']['characterData']['character']['encounterRankings']['ranks'])
         shb_median = logs_shb['data']['characterData']['character']['encounterRankings']['medianPerformance']
-        if not shb_median: shb_median = "-"
-        else: shb_median = round(shb_median, 2)
+        if not shb_median:
+            shb_median = "-"
+        else:
+            shb_median = round(shb_median, 2)
 
         output += f"Best: {shb_best}\n"
         output += f"Median: {shb_median}\n"
@@ -301,24 +312,28 @@ class LogShamer(commands.Cog):
 
         median_avg = round(logs['data']['characterData']['character']['zoneRankings']['medianPerformanceAverage'], 2)
         best_avg = round(logs['data']['characterData']['character']['zoneRankings']['bestPerformanceAverage'], 2)
-        all_stars_percentile = round(logs['data']['characterData']['character']['zoneRankings']['allStars'][0]['rankPercent'], 2)
+        all_stars_percentile = round(
+            logs['data']['characterData']['character']['zoneRankings']['allStars'][0]['rankPercent'], 2)
         encounters = logs['data']['characterData']['character']['zoneRankings']['rankings']
 
-        #formats the logs into a nice string for discord output
+        # formats the logs into a nice string for discord output
         output = "\n\n"
         formatted_data = list()
         prev_week_cleared = None
-        #doing it in reverse so that i can find if a fight later in the tier has an older log than earlier fights
-        #and setting the earlier fights to be cleared on that week
+        # doing it in reverse so that i can find if a fight later in the tier has an older log than earlier fights
+        # and setting the earlier fights to be cleared on that week
         for encounter in reversed(encounters):
             name = encounter['encounter']['name']
             best = encounter['rankPercent']
             median = encounter['medianPercent']
-            week_cleared = await self.get_week_cleared_on(discord_id, encounter['encounter']['id'], release_dates['current_tier'])
+            week_cleared = await self.get_week_cleared_on(discord_id, encounter['encounter']['id'],
+                                                          release_dates['current_tier'])
 
             if prev_week_cleared is None: prev_week_cleared = week_cleared
-            if week_cleared > prev_week_cleared: week_cleared = prev_week_cleared
-            else: prev_week_cleared = week_cleared
+            if week_cleared > prev_week_cleared:
+                week_cleared = prev_week_cleared
+            else:
+                prev_week_cleared = week_cleared
 
             if best:
                 best = round(best, 2)
@@ -334,7 +349,7 @@ class LogShamer(commands.Cog):
 
             formatted_data.append(tmp)
 
-        #adding the data in reverse so the fights are in the correct order since previous loop was done in reverse
+        # adding the data in reverse so the fights are in the correct order since previous loop was done in reverse
         for i in reversed(formatted_data):
             output += i
 
@@ -393,7 +408,7 @@ class LogShamer(commands.Cog):
         logs = await self.helper.get_logs_by_encounter(encounter_id=fight_id, id=fflogs_id)
         posted_fights = logs['data']['characterData']['character']['encounterRankings']['ranks']
 
-        if posted_fights: #checks if there are logs
+        if posted_fights:  # checks if there are logs
             first_log_time = None
             for fight in posted_fights:
                 t = fight['report']['startTime']
@@ -401,7 +416,8 @@ class LogShamer(commands.Cog):
                     first_log_time = t
                 elif t < first_log_time:
                     first_log_time = t
-        else: first_log_time = 0
+        else:
+            first_log_time = 0
 
         return first_log_time
 
@@ -414,7 +430,6 @@ class LogShamer(commands.Cog):
             print(f"Error closing connections: {e}")
         else:
             print(f"Connection closed successfully")
-
 
 
 def setup(bot):
