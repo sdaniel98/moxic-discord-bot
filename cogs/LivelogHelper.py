@@ -13,14 +13,15 @@ class LivelogHelper(commands.Cog):
         self.bot = bot
         self.helper = LogGetter()
         self.livelogs = {}
-        self.fight_img_urls = {"The Unending Coil of Bahamut": "https://assets.rpglogs.com/img/ff/bosses/1047-icon.jpg",
-                               "The Weapon's Refrain": "https://assets.rpglogs.com/img/ff/bosses/1048-icon.jpg",
-                               "The Epic of Alexander": "https://assets.rpglogs.com/img/ff/bosses/1050-icon.jpg",
-                               "Cloud of Darkness": "https://assets.rpglogs.com/img/ff/bosses/73-icon.jpg",
-                               "Shadowkeeper": "https://assets.rpglogs.com/img/ff/bosses/74-icon.jpg",
-                               "Fatebreaker": "https://assets.rpglogs.com/img/ff/bosses/75-icon.jpg",
-                               "Eden's Promise": "https://assets.rpglogs.com/img/ff/bosses/76-icon.jpg",
-                               "Oracle of Darkness": "https://assets.rpglogs.com/img/ff/bosses/77-icon.jpg"}
+        base_img_url = "https://assets.rpglogs.com/img/ff/bosses/"
+        self.fight_img_urls = {"The Unending Coil of Bahamut": f"{base_img_url}1047-icon.jpg",
+                               "The Weapon's Refrain": f"{base_img_url}1048-icon.jpg",
+                               "The Epic of Alexander": f"{base_img_url}1050-icon.jpg",
+                               "Cloud of Darkness": f"{base_img_url}73-icon.jpg",
+                               "Shadowkeeper": f"{base_img_url}74-icon.jpg",
+                               "Fatebreaker": f"{base_img_url}75-icon.jpg",
+                               "Eden's Promise": f"{base_img_url}76-icon.jpg",
+                               "Oracle of Darkness": f"{base_img_url}77-icon.jpg"}
 
     @commands.group(name="livelog", aliases=["ll"])
     async def livelog(self, ctx):
@@ -137,7 +138,7 @@ class LivelogHelper(commands.Cog):
 
         color = await self.get_color(speed_parse)
         title = f"**__{fight_name}__**"
-        description = f"Speed: {speed_parse}"
+        description = f"Speed: **{speed_parse}**"
 
         embed = discord.Embed(title=title, description=description, color=color)
 
@@ -145,7 +146,6 @@ class LivelogHelper(commands.Cog):
             embed.set_thumbnail(url=self.fight_img_urls[fight_name])
 
         embed.add_field(name="\u200b", value="\u200b", inline=False)
-        # embed.add_field(name="\u200b", value="\u200b", inline=False)
         embed = await self.get_tank_logs(logs['roles']['tanks'], embed)
         embed = await self.get_healer_logs(logs['roles']['healers'], embed)
         embed = await self.get_dps_logs(logs['roles']['dps'], embed)
@@ -166,9 +166,9 @@ class LivelogHelper(commands.Cog):
         embed.add_field(name="**__Tanks__**", value="\u200b", inline=True)
         embed.add_field(name="\u200b", value="\u200b", inline=True)
 
-        embed.add_field(name=f"__{tank1_name}__", value=f"DPS: {tank1_dps:,}\nParse: {tank1_parse}", inline=True)
-        embed.add_field(name=f"__{tank2_name}__", value=f"DPS: {tank2_dps:,}\nParse: {tank2_parse}", inline=True)
-        embed.add_field(name=f"__Combined__", value=f"DPS: {combined_tank_dps:,}\nParse: {combined_tank_parse}\n",
+        embed.add_field(name=f"__{tank1_name}__", value=f"DPS: {tank1_dps:,}\nParse: **{tank1_parse}**", inline=True)
+        embed.add_field(name=f"__{tank2_name}__", value=f"DPS: {tank2_dps:,}\nParse: **{tank2_parse}**", inline=True)
+        embed.add_field(name=f"__Combined__", value=f"DPS: {combined_tank_dps:,}\nParse: **{combined_tank_parse}**\n",
                         inline=False)
         embed.add_field(name="\u200b", value="\u200b", inline=False)
         return embed
@@ -188,9 +188,9 @@ class LivelogHelper(commands.Cog):
         embed.add_field(name="**__Healers__**", value="\u200b", inline=True)
         embed.add_field(name="\u200b", value="\u200b", inline=True)
 
-        embed.add_field(name=f"__{healer1_name}__", value=f"DPS: {healer1_dps:,}\nParse: {healer1_parse}", inline=True)
-        embed.add_field(name=f"__{healer2_name}__", value=f"DPS: {healer2_dps:,}\nParse: {healer2_parse}", inline=True)
-        embed.add_field(name=f"__Combined__", value=f"DPS: {combined_healer_dps:,}\nParse: {combined_healer_parse}\n",
+        embed.add_field(name=f"__{healer1_name}__", value=f"DPS: {healer1_dps:,}\nParse: **{healer1_parse}**", inline=True)
+        embed.add_field(name=f"__{healer2_name}__", value=f"DPS: {healer2_dps:,}\nParse: **{healer2_parse}**", inline=True)
+        embed.add_field(name=f"__Combined__", value=f"DPS: {combined_healer_dps:,}\nParse: **{combined_healer_parse}**\n",
                         inline=False)
         embed.add_field(name="\u200b", value="\u200b", inline=False)  # blank field for vertical spacing between roles
         return embed
@@ -216,12 +216,12 @@ class LivelogHelper(commands.Cog):
         embed.add_field(name="**__DPS__**", value="\u200b", inline=True)
         embed.add_field(name="\u200b", value="\u200b", inline=True)
 
-        embed.add_field(name=f"__{dps1_name}__", value=f"DPS: {dps1_dps:,}\nParse: {dps1_parse}", inline=True)
-        embed.add_field(name=f"__{dps2_name}__", value=f"DPS: {dps2_dps:,}\nParse: {dps2_parse}", inline=True)
+        embed.add_field(name=f"__{dps1_name}__", value=f"DPS: {dps1_dps:,}\nParse: **{dps1_parse}**", inline=True)
+        embed.add_field(name=f"__{dps2_name}__", value=f"DPS: {dps2_dps:,}\nParse: **{dps2_parse}**", inline=True)
         embed.add_field(name="\u200b", value="\u200b", inline=False)
 
-        embed.add_field(name=f"__{dps3_name}__", value=f"DPS: {dps3_dps:,}\nParse: {dps3_parse}", inline=True)
-        embed.add_field(name=f"__{dps4_name}__", value=f"DPS: {dps4_dps:,}\nParse: {dps4_parse}", inline=True)
+        embed.add_field(name=f"__{dps3_name}__", value=f"DPS: {dps3_dps:,}\nParse: **{dps3_parse}**", inline=True)
+        embed.add_field(name=f"__{dps4_name}__", value=f"DPS: {dps4_dps:,}\nParse: **{dps4_parse}**", inline=True)
         return embed
 
     async def get_color(self, rank):
